@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="doc-title">ImagorAI — Free AI Image Prompt Generator</title>
+<meta id="doc-desc" name="description" content="Turn a simple idea into a powerful AI image prompt in seconds. No login, no prompt engineering — free bilingual AI image prompt generator.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0e0a1a;
+    --bg-soft: #140f24;
+    --surface: #17112a;
+    --surface-2: #1d1533;
+    --border: rgba(157, 130, 255, 0.16);
+    --border-strong: rgba(190, 150, 255, 0.3);
+    --text: #f3f0fb;
+    --text-dim: #a99fc4;
+    --text-faint: #766c93;
+    --violet: #8b5cf6;
+    --violet-2: #a78bfa;
+    --pink: #ec4899;
+    --cyan: #35e0d0;
+    --green: #3ddc84;
+    --grad-brand: linear-gradient(120deg, var(--violet) 0%, var(--pink) 100%);
+    --grad-glow: radial-gradient(circle, rgba(139,92,246,0.35), transparent 70%);
+    --radius-lg: 22px;
+    --radius-md: 14px;
+    --radius-sm: 10px;
+    --shadow-card: 0 20px 60px -20px rgba(10, 6, 24, 0.7);
+    --maxw: 1120px;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:
+      radial-gradient(900px 500px at 12% -8%, rgba(139,92,246,0.20), transparent 60%),
+      radial-gradient(700px 500px at 92% 8%, rgba(236,72,153,0.14), transparent 55%),
+      radial-gradient(800px 600px at 50% 100%, rgba(53,224,208,0.08), transparent 60%),
+      var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  h1, h2, h3, .display{
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    letter-spacing: -0.02em;
+    font-weight: 600;
+  }
+  img, svg{display:block; max-width:100%;}
+  button{font-family:inherit; cursor:pointer;}
+  a{color:inherit;}
+  .wrap{max-width: var(--maxw); margin: 0 auto; padding: 0 24px;}
+  :focus-visible{outline: 2px solid var(--cyan); outline-offset: 3px; border-radius: 6px;}
+
+  /* ---------- NAV ---------- */
+  .nav{
+    position: sticky; top:0; z-index: 40;
+    backdrop-filter: blur(14px);
+    background: rgba(14, 10, 26, 0.72);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner{
+    max-width: var(--maxw); margin: 0 auto; padding: 16px 24px;
+    display:flex; align-items:center; justify-content:space-between; gap: 20px;
+  }
+  .logo{
+    font-family:'Space Grotesk', sans-serif; font-size: 1.28rem; font-weight: 700;
+    display:flex; align-items:center; gap:2px;
+  }
+  .logo .ai{background: var(--grad-brand); -webkit-background-clip:text; background-clip:text; color:transparent;}
+  .nav-links{display:flex; align-items:center; gap: 28px; list-style:none;}
+  .nav-links a{
+    font-size: 0.92rem; color: var(--text-dim); text-decoration:none; transition: color .15s ease;
+  }
+  .nav-links a:hover{color: var(--text);}
+  .nav-right{display:flex; align-items:center; gap: 18px;}
+  .lang-switch{
+    display:flex; align-items:center; gap:4px;
+    background: var(--surface); border:1px solid var(--border);
+    border-radius: 999px; padding: 4px;
+  }
+  .lang-switch button{
+    border:none; background:transparent; color: var(--text-faint);
+    font-size:0.82rem; font-weight:600; padding: 6px 12px; border-radius:999px;
+    transition: all .15s ease; display:flex; align-items:center; gap:6px;
+  }
+  .lang-switch button.active{background: var(--grad-brand); color:#fff;}
+  .nav-cta-mobile{display:none;}
+
+  /* ---------- HERO ---------- */
+  .hero{padding: 72px 0 40px; text-align:center;}
+  .badge{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size: 0.72rem; font-weight:700; letter-spacing: 0.06em; text-transform:uppercase;
+    color: var(--violet-2);
+    background: rgba(139,92,246,0.12);
+    border: 1px solid var(--border-strong);
+    padding: 7px 16px; border-radius: 999px; margin-bottom: 28px;
+  }
+  .badge .dot{width:6px; height:6px; border-radius:50%; background: var(--pink);}
+  .hero h1{
+    font-size: clamp(2.3rem, 5.4vw, 4.1rem);
+    line-height: 1.06;
+    max-width: 780px; margin: 0 auto;
+  }
+  .hero h1 .grad{
+    background: linear-gradient(100deg, var(--violet-2), var(--pink) 60%, var(--cyan));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .hero p.sub{
+    max-width: 560px; margin: 22px auto 0; color: var(--text-dim);
+    font-size: 1.08rem;
+  }
+  .status-line{
+    margin-top: 22px; display:flex; justify-content:center; align-items:center; gap:8px;
+    font-size: 0.86rem; color: var(--text-faint);
+  }
+  .status-line .pulse{
+    width:8px; height:8px; border-radius:50%; background: var(--green);
+    box-shadow: 0 0 0 0 rgba(61,220,132,.6);
+    animation: pulse 2.2s infinite;
+  }
+  @keyframes pulse{
+    0%{box-shadow: 0 0 0 0 rgba(61,220,132,.55);}
+    70%{box-shadow: 0 0 0 9px rgba(61,220,132,0);}
+    100%{box-shadow: 0 0 0 0 rgba(61,220,132,0);}
+  }
+  .benefits{
+    margin-top: 34px; display:flex; justify-content:center; flex-wrap:wrap; gap: 12px 28px;
+  }
+  .benefits span{font-size:0.92rem; color: var(--text-dim); display:flex; align-items:center; gap:7px;}
+  .benefits b{color: var(--text); font-weight: 600;}
+
+  /* ---------- GENERATOR ---------- */
+  .generator-section{padding: 46px 0 90px;}
+  .gen-card{
+    max-width: 860px; margin: 0 auto;
+    background: linear-gradient(180deg, var(--surface), var(--bg-soft));
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 34px 30px 32px;
+    box-shadow: var(--shadow-card);
+    position: relative;
+    overflow: hidden;
+  }
+  .gen-card::before{
+    content:''; position:absolute; inset:-2px;
+    background: conic-gradient(from 180deg, rgba(139,92,246,0.5), rgba(236,72,153,0.35), rgba(53,224,208,0.3), rgba(139,92,246,0.5));
+    z-index:-1; border-radius: inherit; opacity: .5; filter: blur(22px);
+  }
+  .gen-head{
+    display:flex; align-items:center; justify-content:space-between; margin-bottom: 26px; flex-wrap:wrap; gap: 10px;
+  }
+  .gen-head h2{font-size: 1.3rem;}
+  .gen-status{
+    font-size: 0.8rem; color: var(--text-faint); display:flex; align-items:center; gap:7px;
+  }
+  .gen-status .pulse{width:7px; height:7px; border-radius:50%; background: var(--green);}
+
+  .field{margin-bottom: 22px;}
+  .field:last-of-type{margin-bottom: 0;}
+  .field-label{
+    display:block; font-size: 0.86rem; font-weight: 600; color: var(--text-dim); margin-bottom: 10px;
+  }
+  .chip-row{display:flex; flex-wrap:wrap; gap: 9px;}
+  .chip{
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text-dim);
+    padding: 9px 15px;
+    border-radius: 999px;
+    font-size: 0.87rem;
+    font-weight: 500;
+    transition: all .15s ease;
+    white-space: nowrap;
+  }
+  .chip:hover{border-color: var(--border-strong); color: var(--text);}
+  .chip.selected{
+    background: var(--grad-brand);
+    color: #fff;
+    border-color: transparent;
+  }
+
+  .gen-actions{
+    display:flex; gap: 14px; margin-top: 30px; flex-wrap:wrap;
+  }
+  .btn{
+    border:none; border-radius: 999px; padding: 15px 26px;
+    font-size: 0.96rem; font-weight: 700; display:inline-flex; align-items:center; gap:9px;
+    transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
+  }
+  .btn-primary{
+    background: var(--grad-brand); color:#fff; flex: 1 1 220px; justify-content:center;
+    box-shadow: 0 14px 34px -12px rgba(139,92,246,0.55);
+  }
+  .btn-primary:hover{filter: brightness(1.08); transform: translateY(-1px);}
+  .btn-secondary{
+    background: var(--surface-2); color: var(--text); border: 1px solid var(--border);
+  }
+  .btn-secondary:hover{border-color: var(--border-strong);}
+
+  .result{
+    margin-top: 28px;
+    opacity: 0; max-height: 0; overflow:hidden;
+    transition: opacity .35s ease, max-height .45s ease;
+  }
+  .result.show{opacity:1; max-height: 600px;}
+  .result-label{
+    font-size: 0.74rem; font-weight:700; letter-spacing: 0.08em; text-transform:uppercase;
+    color: var(--cyan); margin-bottom: 10px;
+  }
+  .result-box{
+    background: #0b0817;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 20px 22px;
+    font-size: 0.98rem;
+    color: var(--text);
+    line-height: 1.65;
+  }
+  .copy-btn{
+    margin-top: 14px;
+    background: transparent; border: 1px solid var(--border-strong); color: var(--violet-2);
+    padding: 11px 20px; border-radius: 999px; font-weight:600; font-size: 0.88rem;
+    display:inline-flex; align-items:center; gap:8px; transition: all .15s ease;
+  }
+  .copy-btn:hover{background: rgba(139,92,246,0.12);}
+  .copy-btn.copied{color: var(--green); border-color: rgba(61,220,132,0.5);}
+
+  /* ---------- SECTIONS SHARED ---------- */
+  section.block{padding: 70px 0;}
+  .section-head{text-align:center; max-width: 620px; margin: 0 auto 40px;}
+  .section-head h2{font-size: clamp(1.7rem, 3.4vw, 2.3rem);}
+  .section-head p{color: var(--text-dim); margin-top: 12px; font-size: 1.02rem;}
+
+  /* ---------- TRENDING ---------- */
+  .trend-grid{
+    display:grid; grid-template-columns: repeat(4, 1fr); gap: 18px;
+  }
+  .trend-card{
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md);
+    padding: 20px; position:relative; overflow:hidden; transition: border-color .2s ease, transform .2s ease;
+    min-height: 150px; display:flex; flex-direction:column; justify-content:flex-end;
+  }
+  .trend-card::after{
+    content:''; position:absolute; top:-30%; right:-30%; width: 140px; height:140px;
+    background: var(--grad-glow); opacity:.6;
+  }
+  .trend-card:hover{border-color: var(--border-strong); transform: translateY(-3px);}
+  .trend-tag{
+    align-self:flex-start;
+    font-size: 0.66rem; font-weight:700; letter-spacing:0.07em; text-transform:uppercase;
+    padding: 4px 10px; border-radius: 999px; margin-bottom: auto;
+    background: rgba(236,72,153,0.16); color: var(--pink);
+  }
+  .trend-card h3{font-size: 1.05rem; margin-top: 18px;}
+  .trend-card p{font-size: 0.86rem; color: var(--text-dim); margin-top: 4px;}
+
+  /* ---------- WHY ---------- */
+  .feature-grid{display:grid; grid-template-columns: repeat(3, 1fr); gap: 22px;}
+  .feature{
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md);
+    padding: 26px 22px;
+  }
+  .feature .icon{font-size: 1.6rem; margin-bottom: 14px;}
+  .feature h3{font-size: 1.05rem; margin-bottom: 8px;}
+  .feature p{color: var(--text-dim); font-size: 0.92rem;}
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    border-top: 1px solid var(--border);
+    padding: 32px 0; text-align:center;
+  }
+  footer p{color: var(--text-faint); font-size: 0.86rem;}
+  footer p.sub{margin-top: 4px;}
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 860px){
+    .trend-grid{grid-template-columns: repeat(2, 1fr);}
+    .feature-grid{grid-template-columns: 1fr;}
+  }
+  @media (max-width: 640px){
+    .nav-links{display:none;}
+    .hero{padding: 48px 0 28px;}
+    .gen-card{padding: 26px 18px;}
+    .trend-grid{grid-template-columns: 1fr 1fr; gap: 12px;}
+    .btn-primary, .btn-secondary{flex: 1 1 100%;}
+    .lang-switch button span.lbl{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="logo">Imagor<span class="ai">AI</span></div>
+    <ul class="nav-links">
+      <li><a href="#generator" data-i18n="nav_generator">Generator</a></li>
+      <li><a href="#trending" data-i18n="nav_trending">Trending</a></li>
+      <li><a href="#about" data-i18n="nav_about">About</a></li>
+    </ul>
+    <div class="nav-right">
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button type="button" data-lang="en" class="active">🇺🇸 <span class="lbl">EN</span></button>
+        <button type="button" data-lang="pt">🇧🇷 <span class="lbl">PT</span></button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="badge"><span class="dot"></span><span data-i18n="hero_badge">AI Image Prompt Generator • Free</span></span>
+    <h1 data-i18n-html="hero_title">Create images that <span class="grad">stop the scroll.</span></h1>
+    <p class="sub" data-i18n="hero_sub">Turn a simple idea into a powerful AI image prompt — no prompt engineering required.</p>
+    <div class="status-line"><span class="pulse"></span><span data-i18n="hero_status">Ready to create</span></div>
+    <div class="benefits">
+      <span>⚡ <b data-i18n="benefit_1">No login</b></span>
+      <span>✦ <b data-i18n="benefit_2">Instant prompts</b></span>
+      <span>↗ <b data-i18n="benefit_3">Copy & create</b></span>
+    </div>
+  </div>
+</header>
+
+<section class="generator-section" id="generator">
+  <div class="wrap">
+    <div class="gen-card">
+      <div class="gen-head">
+        <h2>✨ <span data-i18n="gen_title">Prompt Generator</span></h2>
+        <div class="gen-status"><span class="pulse"></span><span data-i18n="hero_status">Ready to create</span></div>
+      </div>
+
+      <div class="field">
+        <span class="field-label" data-i18n="field_subject">What to create?</span>
+        <div class="chip-row" data-field="subject"></div>
+      </div>
+      <div class="field">
+        <span class="field-label" data-i18n="field_style">Style</span>
+        <div class="chip-row" data-field="style"></div>
+      </div>
+      <div class="field">
+        <span class="field-label" data-i18n="field_lighting">Lighting</span>
+        <div class="chip-row" data-field="lighting"></div>
+      </div>
+      <div class="field">
+        <span class="field-label" data-i18n="field_mood">Mood</span>
+        <div class="chip-row" data-field="mood"></div>
+      </div>
+      <div class="field">
+        <span class="field-label" data-i18n="field_location">Location</span>
+        <div class="chip-row" data-field="location"></div>
+      </div>
+      <div class="field">
+        <span class="field-label" data-i18n="field_camera">Camera</span>
+        <div class="chip-row" data-field="camera"></div>
+      </div>
+      <div class="field">
+        <span class="field-label" data-i18n="field_ratio">Aspect ratio</span>
+        <div class="chip-row" data-field="ratio"></div>
+      </div>
+
+      <div class="gen-actions">
+        <button class="btn btn-primary" id="generateBtn">✨ <span data-i18n="btn_generate">Generate Prompt</span></button>
+        <button class="btn btn-secondary" id="surpriseBtn">🎲 <span data-i18n="btn_surprise">Surprise Me</span></button>
+      </div>
+
+      <div class="result" id="resultBlock">
+        <div class="result-label" data-i18n="result_label">Your Prompt Is Ready</div>
+        <div class="result-box" id="resultText"></div>
+        <button class="copy-btn" id="copyBtn">📋 <span id="copyLabel" data-i18n="btn_copy">Copy Prompt</span></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="trending">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>🔥 <span data-i18n="trend_title">Trending Prompts</span></h2>
+      <p data-i18n="trend_sub">Try what people are creating right now.</p>
+    </div>
+    <div class="trend-grid">
+      <div class="trend-card">
+        <span class="trend-tag" data-i18n="tag_viral">Viral</span>
+        <h3 data-i18n="card1_title">AI Headshots</h3>
+        <p data-i18n="card1_desc">Professional profile photos</p>
+      </div>
+      <div class="trend-card">
+        <span class="trend-tag" data-i18n="tag_trending">Trending</span>
+        <h3 data-i18n="card2_title">Cinematic Travel</h3>
+        <p data-i18n="card2_desc">Luxury travel photography</p>
+      </div>
+      <div class="trend-card">
+        <span class="trend-tag" data-i18n="tag_hot">Hot</span>
+        <h3 data-i18n="card3_title">90s Yearbook</h3>
+        <p data-i18n="card3_desc">Nostalgic social photos</p>
+      </div>
+      <div class="trend-card">
+        <span class="trend-tag" data-i18n="tag_new">New</span>
+        <h3 data-i18n="card4_title">Luxury Editorial</h3>
+        <p data-i18n="card4_desc">High-fashion aesthetics</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="about">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 data-i18n="why_title">Simple. Fast. Actually useful.</h2>
+      <p data-i18n="why_desc">No prompt engineering degree required. Pick a few options and let ImagorAI build the structure for you.</p>
+    </div>
+    <div class="feature-grid">
+      <div class="feature">
+        <div class="icon">⚡</div>
+        <h3 data-i18n="feat1_title">Seconds, not minutes</h3>
+        <p data-i18n="feat1_desc">Go from idea to polished prompt without writing everything from scratch.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">🎨</div>
+        <h3 data-i18n="feat2_title">Built for visual creators</h3>
+        <p data-i18n="feat2_desc">Portraits, travel, fashion, products and social content — all in one place.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">🔒</div>
+        <h3 data-i18n="feat3_title">No account needed</h3>
+        <p data-i18n="feat3_desc">The first version runs entirely in your browser. No signup, subscription, or database is required.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>© 2026 ImagorAI</p>
+    <p class="sub" data-i18n="footer_tag">Free AI image prompt generator</p>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
