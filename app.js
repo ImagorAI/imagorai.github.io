@@ -19,6 +19,9 @@
       benefit_2: "Instant prompts",
       benefit_3: "Copy & create",
       gen_title: "Prompt Generator",
+      field_idea: "Your idea (optional)",
+      field_idea_hint: "Describe what you want to create and we'll turn it into a detailed prompt using the options below.",
+      field_idea_placeholder: "A woman walking through Tokyo at night",
       field_subject: "What to create?",
       field_style: "Style",
       field_lighting: "Lighting",
@@ -71,6 +74,9 @@
       benefit_2: "Prompts instantâneos",
       benefit_3: "Copie e crie",
       gen_title: "Gerador de Prompt",
+      field_idea: "Sua ideia (opcional)",
+      field_idea_hint: "Descreva o que você quer criar e vamos transformar isso em um prompt detalhado usando as opções abaixo.",
+      field_idea_placeholder: "Uma mulher caminhando por Tóquio à noite",
       field_subject: "O que você quer criar?",
       field_style: "Estilo",
       field_lighting: "Iluminação",
@@ -226,6 +232,22 @@
     const s = {};
     FIELD_ORDER.forEach(function (f) { s[f] = findOpt(f, selected[f]); });
 
+    const ideaEl = document.getElementById("ideaInput");
+    const idea = ideaEl ? ideaEl.value.trim() : "";
+
+    if (idea) {
+      if (lang === "en") {
+        return "Create a " + s.style.phraseEn + " image of " + idea + ", with " +
+          s.lighting.phraseEn + " and a " + s.mood.phraseEn + " atmosphere. Shot with " + s.camera.phraseEn +
+          ", realistic details, natural textures, refined composition, professional photography quality, " +
+          "subtle depth of field, high visual clarity. Aspect ratio " + s.ratio.en + ".";
+      }
+      return "Crie uma imagem de estilo " + s.style.phrasePt + " a partir da ideia: " + idea + ", com " +
+        s.lighting.phrasePt + " e uma atmosfera " + s.mood.phrasePt + ". Fotografado com " + s.camera.phrasePt +
+        ", detalhes realistas, texturas naturais, composição refinada, qualidade fotográfica profissional, " +
+        "profundidade de campo sutil, alta nitidez visual. Proporção " + s.ratio.pt + ".";
+    }
+
     if (lang === "en") {
       return "Create a " + s.style.phraseEn + " " + s.subject.phraseEn + " set in " +
         s.location.phraseEn + ", with " + s.lighting.phraseEn + " and a " + s.mood.phraseEn +
@@ -251,6 +273,8 @@
   }
 
   function surprise() {
+    const ideaEl = document.getElementById("ideaInput");
+    if (ideaEl) ideaEl.value = "";
     FIELD_ORDER.forEach(function (field) {
       const opts = OPTIONS[field];
       const pick = opts[Math.floor(Math.random() * opts.length)];
@@ -336,6 +360,11 @@
       if (dict[htmlKey] !== undefined) el.innerHTML = dict[htmlKey];
     });
 
+    document.querySelectorAll("[data-i18n-placeholder]").forEach(function (el) {
+      const key = el.getAttribute("data-i18n-placeholder");
+      if (dict[key] !== undefined) el.setAttribute("placeholder", dict[key]);
+    });
+
     document.querySelectorAll(".lang-switch button").forEach(function (btn) {
       btn.classList.toggle("active", btn.getAttribute("data-lang") === lang);
     });
@@ -382,6 +411,13 @@
     document.getElementById("generateBtn").addEventListener("click", generate);
     document.getElementById("surpriseBtn").addEventListener("click", surprise);
     document.getElementById("copyBtn").addEventListener("click", copyPrompt);
+
+    const ideaInput = document.getElementById("ideaInput");
+    if (ideaInput) {
+      ideaInput.addEventListener("input", function () {
+        if (hasGenerated) generate();
+      });
+    }
 
     const howCopyBtn = document.getElementById("howCopyBtn");
     if (howCopyBtn) howCopyBtn.addEventListener("click", copyHowPrompt);
