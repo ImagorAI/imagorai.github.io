@@ -50,6 +50,9 @@
       feat3_title: "No account needed",
       feat3_desc: "The first version runs entirely in your browser. No signup, subscription, or database is required.",
       footer_tag: "Free AI image prompt generator",
+      footer_contact: "Contact",
+      footer_privacy: "Privacy Policy",
+      footer_terms: "Terms",
 
       how_title: "From idea to image.",
       how_sub: "See exactly how ImagorAI turns a simple thought into a prompt worth using.",
@@ -105,6 +108,9 @@
       feat3_title: "Sem cadastro",
       feat3_desc: "A primeira versão roda inteiramente no navegador. Não é necessário cadastro, assinatura ou banco de dados.",
       footer_tag: "Gerador gratuito de prompts para imagens com IA",
+      footer_contact: "Contato",
+      footer_privacy: "Política de Privacidade",
+      footer_terms: "Termos de Uso",
 
       how_title: "Da ideia à imagem.",
       how_sub: "Veja exatamente como o ImagorAI transforma uma ideia simples em um prompt que vale a pena usar.",
@@ -186,6 +192,10 @@
 
   /* current state */
   let lang = "en";
+  try {
+    const saved = window.localStorage.getItem("imagorai_lang");
+    if (saved === "en" || saved === "pt") lang = saved;
+  } catch (e) { /* localStorage unavailable — default to en */ }
   const selected = {
     subject: "portrait",
     style: "cinematic",
@@ -377,6 +387,7 @@
   function setLanguage(newLang) {
     if (newLang === lang) return;
     lang = newLang;
+    try { window.localStorage.setItem("imagorai_lang", lang); } catch (e) {}
     applyLanguage();
   }
 
@@ -407,6 +418,7 @@
 
   document.addEventListener("DOMContentLoaded", function () {
     renderChips();
+    if (lang === "pt") applyLanguage();
 
     document.getElementById("generateBtn").addEventListener("click", generate);
     document.getElementById("surpriseBtn").addEventListener("click", surprise);
