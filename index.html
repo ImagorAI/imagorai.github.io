@@ -320,9 +320,10 @@
     border: 1px solid var(--border);
     box-shadow: 0 16px 40px -18px rgba(139,92,246,0.45);
   }
-  .result-image svg{
+  .result-image img{
     position: absolute; inset: 0;
     width: 100%; height: 100%; display:block;
+    object-fit: cover;
   }
   .flow-cta-wrap{text-align:center; margin-top: 32px;}
   .flow-cta{
@@ -521,67 +522,7 @@
         <span class="flow-num n3">03</span>
         <span class="flow-label" data-i18n="how_step3_label">Your result</span>
         <div class="result-image">
-          <svg viewBox="0 0 480 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Example AI-generated image of a woman walking through Tokyo at night">
-            <defs>
-              <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#241a3d"/>
-                <stop offset="55%" stop-color="#170f2b"/>
-                <stop offset="100%" stop-color="#0b0817"/>
-              </linearGradient>
-              <linearGradient id="glowGrad" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stop-color="#ec4899"/>
-                <stop offset="100%" stop-color="#8b5cf6"/>
-              </linearGradient>
-              <radialGradient id="signGlow" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stop-color="#35e0d0" stop-opacity="0.9"/>
-                <stop offset="100%" stop-color="#35e0d0" stop-opacity="0"/>
-              </radialGradient>
-              <radialGradient id="pinkGlow" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stop-color="#ec4899" stop-opacity="0.85"/>
-                <stop offset="100%" stop-color="#ec4899" stop-opacity="0"/>
-              </radialGradient>
-            </defs>
-            <rect width="480" height="270" fill="url(#skyGrad)"/>
-            <circle cx="390" cy="46" r="60" fill="url(#pinkGlow)"/>
-            <circle cx="90" cy="60" r="46" fill="url(#signGlow)"/>
-            <g opacity="0.9">
-              <rect x="0" y="120" width="46" height="150" fill="#120c22"/>
-              <rect x="50" y="90" width="34" height="180" fill="#150e28"/>
-              <rect x="88" y="140" width="52" height="130" fill="#120c22"/>
-              <rect x="144" y="70" width="30" height="200" fill="#170f2b"/>
-              <rect x="178" y="110" width="44" height="160" fill="#120c22"/>
-              <rect x="226" y="60" width="36" height="210" fill="#150e28"/>
-              <rect x="266" y="130" width="50" height="140" fill="#120c22"/>
-              <rect x="320" y="85" width="32" height="185" fill="#170f2b"/>
-              <rect x="356" y="150" width="46" height="120" fill="#120c22"/>
-              <rect x="406" y="100" width="34" height="170" fill="#150e28"/>
-              <rect x="444" y="135" width="36" height="135" fill="#120c22"/>
-            </g>
-            <g fill="#ffd88a" opacity="0.85">
-              <rect x="8" y="140" width="5" height="7"/><rect x="20" y="160" width="5" height="7"/>
-              <rect x="8" y="180" width="5" height="7"/><rect x="20" y="200" width="5" height="7"/>
-              <rect x="58" y="110" width="4" height="6"/><rect x="70" y="130" width="4" height="6"/>
-              <rect x="58" y="150" width="4" height="6"/><rect x="70" y="170" width="4" height="6"/>
-              <rect x="96" y="160" width="5" height="7"/><rect x="112" y="180" width="5" height="7"/>
-              <rect x="184" y="130" width="4" height="6"/><rect x="200" y="150" width="4" height="6"/>
-              <rect x="232" y="82" width="4" height="6"/><rect x="246" y="100" width="4" height="6"/>
-              <rect x="232" y="120" width="4" height="6"/><rect x="246" y="140" width="4" height="6"/>
-              <rect x="274" y="150" width="5" height="7"/><rect x="290" y="170" width="5" height="7"/>
-              <rect x="362" y="170" width="5" height="7"/><rect x="378" y="190" width="5" height="7"/>
-              <rect x="412" y="115" width="4" height="6"/><rect x="424" y="135" width="4" height="6"/>
-            </g>
-            <rect x="0" y="200" width="480" height="70" fill="#0b0817"/>
-            <rect x="0" y="205" width="480" height="2" fill="url(#glowGrad)" opacity="0.55"/>
-            <g transform="translate(238,175)">
-              <ellipse cx="0" cy="98" rx="26" ry="6" fill="#000" opacity="0.35"/>
-              <circle cx="0" cy="8" r="9" fill="#0f0a1d" stroke="url(#glowGrad)" stroke-width="1.4"/>
-              <path d="M-11 24c0-9 22-9 22 0v34c0 4-4 7-8 7h-6c-4 0-8-3-8-7z" fill="#0f0a1d" stroke="url(#glowGrad)" stroke-width="1.4"/>
-              <path d="M-9 60 -13 92" stroke="url(#glowGrad)" stroke-width="3" stroke-linecap="round"/>
-              <path d="M9 60 13 92" stroke="url(#glowGrad)" stroke-width="3" stroke-linecap="round"/>
-              <path d="M-11 30 -20 46" stroke="url(#glowGrad)" stroke-width="2.4" stroke-linecap="round"/>
-              <path d="M11 30 19 44" stroke="url(#glowGrad)" stroke-width="2.4" stroke-linecap="round"/>
-            </g>
-          </svg>
+          <img src="tokyo-night.jpg" alt="Example AI-generated image of a woman walking through Tokyo at night" loading="lazy">
         </div>
       </div>
     </div>
