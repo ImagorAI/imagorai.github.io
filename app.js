@@ -46,7 +46,16 @@
       feat2_desc: "Portraits, travel, fashion, products and social content — all in one place.",
       feat3_title: "No account needed",
       feat3_desc: "The first version runs entirely in your browser. No signup, subscription, or database is required.",
-      footer_tag: "Free AI image prompt generator"
+      footer_tag: "Free AI image prompt generator",
+
+      how_title: "From idea to image.",
+      how_sub: "See exactly how ImagorAI turns a simple thought into a prompt worth using.",
+      how_step1_label: "Your idea",
+      how_step1_example: "A woman walking through Tokyo at night",
+      how_step2_label: "ImagorAI",
+      how_step2_prompt: "Create a cinematic travel photo set in Tokyo, with neon lighting and a mysterious atmosphere. Shot with a 35mm wide angle lens, realistic details, natural textures, refined composition, professional photography quality, subtle depth of field, high visual clarity. Aspect ratio 16:9.",
+      how_step3_label: "Your result",
+      how_cta: "Create your own prompt →"
     },
     pt: {
       doc_title: "ImagorAI — Gerador Gratuito de Prompts para Imagens com IA",
@@ -89,7 +98,16 @@
       feat2_desc: "Retratos, viagens, moda, produtos e conteúdo social — tudo em um só lugar.",
       feat3_title: "Sem cadastro",
       feat3_desc: "A primeira versão roda inteiramente no navegador. Não é necessário cadastro, assinatura ou banco de dados.",
-      footer_tag: "Gerador gratuito de prompts para imagens com IA"
+      footer_tag: "Gerador gratuito de prompts para imagens com IA",
+
+      how_title: "Da ideia à imagem.",
+      how_sub: "Veja exatamente como o ImagorAI transforma uma ideia simples em um prompt que vale a pena usar.",
+      how_step1_label: "Sua ideia",
+      how_step1_example: "Uma mulher caminhando por Tóquio à noite",
+      how_step2_label: "ImagorAI",
+      how_step2_prompt: "Crie uma foto de viagem de estilo cinematográfico, ambientada em Tóquio, com iluminação neon e uma atmosfera misteriosa. Fotografado com uma lente grande angular 35mm, detalhes realistas, texturas naturais, composição refinada, qualidade fotográfica profissional, profundidade de campo sutil, alta nitidez visual. Proporção 16:9.",
+      how_step3_label: "Seu resultado",
+      how_cta: "Crie seu próprio prompt →"
     }
   };
 
@@ -252,17 +270,20 @@
     copyLabel.textContent = I18N[lang].btn_copy;
   }
 
-  function copyPrompt() {
-    const text = document.getElementById("resultText").textContent;
-    const copyBtn = document.getElementById("copyBtn");
-    const copyLabel = document.getElementById("copyLabel");
+  function resetHowCopyState() {
+    const btn = document.getElementById("howCopyBtn");
+    const label = document.getElementById("howCopyLabel");
+    if (!btn || !label) return;
+    btn.classList.remove("copied");
+    label.textContent = I18N[lang].btn_copy;
+  }
 
+  function copyWithFeedback(text, btnEl, labelEl, resetFn) {
     function markCopied() {
-      copyBtn.classList.add("copied");
-      copyLabel.textContent = I18N[lang].btn_copied;
-      setTimeout(resetCopyState, 1800);
+      btnEl.classList.add("copied");
+      labelEl.textContent = I18N[lang].btn_copied;
+      setTimeout(resetFn, 1800);
     }
-
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(text).then(markCopied).catch(function () {
         fallbackCopy(text, markCopied);
@@ -270,6 +291,16 @@
     } else {
       fallbackCopy(text, markCopied);
     }
+  }
+
+  function copyPrompt() {
+    const text = document.getElementById("resultText").textContent;
+    copyWithFeedback(text, document.getElementById("copyBtn"), document.getElementById("copyLabel"), resetCopyState);
+  }
+
+  function copyHowPrompt() {
+    const text = document.getElementById("howPromptText").textContent;
+    copyWithFeedback(text, document.getElementById("howCopyBtn"), document.getElementById("howCopyLabel"), resetHowCopyState);
   }
 
   function fallbackCopy(text, cb) {
@@ -311,6 +342,7 @@
 
     renderChips();
     if (hasGenerated) generate(); else resetCopyState();
+    resetHowCopyState();
   }
 
   function setLanguage(newLang) {
@@ -322,6 +354,28 @@
   /* ---------------------------------------------------------
      7. INIT
   --------------------------------------------------------- */
+  function initScrollReveal() {
+    const cards = document.querySelectorAll(".how-section .reveal");
+    if (!cards.length) return;
+
+    const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion || !("IntersectionObserver" in window)) {
+      cards.forEach(function (c) { c.classList.add("in-view"); });
+      return;
+    }
+
+    const observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("in-view");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.25 });
+
+    cards.forEach(function (c) { observer.observe(c); });
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     renderChips();
 
@@ -329,10 +383,15 @@
     document.getElementById("surpriseBtn").addEventListener("click", surprise);
     document.getElementById("copyBtn").addEventListener("click", copyPrompt);
 
+    const howCopyBtn = document.getElementById("howCopyBtn");
+    if (howCopyBtn) howCopyBtn.addEventListener("click", copyHowPrompt);
+
     document.querySelectorAll(".lang-switch button").forEach(function (btn) {
       btn.addEventListener("click", function () {
         setLanguage(btn.getAttribute("data-lang"));
       });
     });
+
+    initScrollReveal();
   });
 })();
