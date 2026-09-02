@@ -311,12 +311,19 @@
   }
   .result-card{padding: 20px;}
   .result-image{
-    flex: 1; border-radius: var(--radius-sm); overflow:hidden;
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%; /* 16:9, works in every browser without relying on aspect-ratio */
+    height: 0;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
     border: 1px solid var(--border);
-    aspect-ratio: 16 / 9;
     box-shadow: 0 16px 40px -18px rgba(139,92,246,0.45);
   }
-  .result-image svg{width:100%; height:100%; display:block;}
+  .result-image svg{
+    position: absolute; inset: 0;
+    width: 100%; height: 100%; display:block;
+  }
   .flow-cta-wrap{text-align:center; margin-top: 32px;}
   .flow-cta{
     display:inline-flex; align-items:center; gap:8px;
